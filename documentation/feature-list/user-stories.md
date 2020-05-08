@@ -33,3 +33,17 @@ So that I can see all the tricks they do in my feed
 As a user
 I would like to know what the skating conditions are at the spot through reviews
 So that I could justify whether it is worth going to that spot
+
+As a user
+I would like to follow other skaters / skate spots / skate crews
+So that I could be updated with what they are doing or what tricks are being
+landed at that spot
+
+As a user
+I would like to see what events are going on (eg. Olympics, Street League,
+X-Games)
+So that I could see what tricks were done on what part of the park
+
+As a user
+I would like to tag my friends in my skate clips / photos
+So that I could give them recognition in my skate clip / photo
