@@ -2,36 +2,36 @@
 
 ## Homepage - /
 
-- <Homepage />
-  - <Login /> // need separate component?
-  - <Footer />
+- Homepage
+  - Login // need separate component?
+  - Footer
   - splash screen image carousel
 
 ## Sign up - /skate/signup
 
-- <SignUpForm>
+- SignUpForm
 
 ## Skate Spot - /skatespots
 
-- <Navbar />
+- Navbar
   - logo
   - search
   - user profile (bonus)
   - skate crew (bonus)
-- <SkateSpots />
-- <Footer />
+- SkateSpots
+- Footer
 
 ## Specific Skate Spot - /skatespots/:id
 
-- <Navbar />
-- <SkateSpot />
-  - <SkateSpotDetails />
+- Navbar
+- SkateSpot
+  - SkateSpotDetails
     - details of skate spot
-  - <SkateClips />
+  - SkateClips
     - feed of clips at the skate spot
-  - <SkateClip />
+  - SkateClip
     - streamable clip
     - comments
     - popup
     - transparent background
-- <Footer />
+- Footer
