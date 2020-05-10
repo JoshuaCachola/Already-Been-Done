@@ -1,35 +1,38 @@
 #!/usr/bin/env node
 
 const app = require("../app");
+const debug = require("debug")("starter:server");
 const http = require("http");
 
 // Get port from environment and store in Express
 const port = normalizePort(process.env.PORT || '8008');
 app.set("port", port);
 
-
 // create HTTP server
 const server = http.createServer(app);
 
 // Listen on provided port, on all network interfaces
-
 server.listen(port);
 server.on("error", onError);
 server.on("listening", onListening);
 
 // Normalize a port into a number, string, or false
-
-const normalizePort = (val) => {
+function normalizePort(val) {
   const port = parseInt(val, 10);
 
   if (isNaN(port)) {
+    return val;
+  }
+
+  if (port >= 0) {
     return port;
   }
 
   return false;
 };
 
-const onError = (error) => {
+// Event listener for HTTP server "error" event
+function onError(error) {
   if (error.syscall !== "listen") {
     throw error;
   }
@@ -39,13 +42,12 @@ const onError = (error) => {
     : "Port " + port;
 
   // handle specific listen errors with friendly messages
-
-  switch(error.code) {
+  switch (error.code) {
     case "EACCES":
       console.error(bind + " requires elevated priviledges");
       process.exit(1);
       break;
-    case "EADDRINUSE": 
+    case "EADDRINUSE":
       console.error(bind + " is already in use");
       process.exit(1);
       break;
@@ -53,3 +55,13 @@ const onError = (error) => {
       throw error;
   }
 };
+
+// Event listener for HTTP server "listening" event
+
+function onListening() {
+  const address = server.address();
+  const bind = typeof address === "string"
+    ? "pipe " + address
+    : "port " + address;
+  debug("Listending on " + bind);
+}
