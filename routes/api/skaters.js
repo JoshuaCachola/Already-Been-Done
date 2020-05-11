@@ -49,7 +49,7 @@ router.post(
     const token = getSkaterToken(skater);
     res.json({
       token,
-      skater: { id: skater.id }
+      // skater: { id: skater.id }
     });
   })
 );

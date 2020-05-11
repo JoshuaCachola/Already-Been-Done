@@ -14,8 +14,8 @@
 ## Skate Clips
 
 - GET /clips - get a feed of all skate clips // probably do not need
-- GET /skatespot/:id/clips - get a feed of all skate clips of a spot
-- POST /skatespot/:id/clips - post a new clip of a trick at the skate spot
+- GET /skatespots/:id/clips - get a feed of all skate clips of a spot
+- POST /skatespots/:id/upload - post a new clip of a trick at the skate spot
 
 ## Bonus
 
