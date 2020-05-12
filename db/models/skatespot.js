@@ -5,18 +5,27 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.STRING(50),
     },
+    city: {
+      allowNull: false,
+      type: DataTypes.STRING(50)
+    },
+    state: {
+      allowNull: false,
+      type: DataTypes.STRING(50)
+    },
     address: {
       allowNull: false,
       type: DataTypes.STRING(50),
     },
     lat: {
-      allowNull: false,
       type: DataTypes.FLOAT,
     },
-    lon: {
-      allowNull: false,
+    lng: {
       type: DataTypes.FLOAT,
     },
+    imgs: {
+      type: DataTypes.ARRAY(DataTypes.STRING(255))
+    }
   }, {});
   SkateSpot.associate = function (models) {
     // associations can be defined here

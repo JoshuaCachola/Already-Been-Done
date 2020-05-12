@@ -1,9 +1,6 @@
 const router = require("express").Router();
+const v1 = require("./v1");
 
-const routes = ["skaters", "skatespots"];
-
-for (let route of routes) {
-  router.use(`/${route}`, require(`./${route}`));
-}
+router.use("/v1", v1);
 
 module.exports = router;
