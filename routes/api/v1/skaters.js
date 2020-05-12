@@ -1,12 +1,12 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
-const { Skater } = require("../../db/models");
-const { getSkaterToken, requireAuth } = require("../../auth");
+const { Skater } = require("../../../db/models");
+const { getSkaterToken, requireAuth } = require("../../../auth");
 const {
   /* validateUserSignUp, */
   validateUsernameAndPassword
-} = require("../../validations");
+} = require("../../../validations");
 
 const router = express.Router();
 

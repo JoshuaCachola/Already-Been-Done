@@ -12,6 +12,14 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING(50)
       },
+      city: {
+        allowNull: false,
+        type: Sequelize.STRING(50)
+      },
+      state: {
+        allowNull: false,
+        type: Sequelize.STRING(50)
+      },
       address: {
         allowNull: false,
         type: Sequelize.STRING(50)
@@ -20,9 +28,12 @@ module.exports = {
         allowNull: false,
         type: Sequelize.FLOAT
       },
-      lon: {
+      lng: {
         allowNull: false,
         type: Sequelize.FLOAT
+      },
+      imgs: {
+        type: Sequelize.ARRAY(Sequelize.STRING(255)),
       },
       createdAt: {
         allowNull: false,

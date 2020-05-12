@@ -1,7 +1,8 @@
 const express = require("express");
 const asyncHandler = require("express-async-handler");
-const { SkateSpots, SkateClips } = require("../../db/models");
-const upload = require("../../services/file-upload");
+const { requireAuth } = require("../../../auth");
+const { SkateSpot, SkateClips } = require("../../../db/models");
+const upload = require("../../../services/file-upload");
 // console.log(upload);
 const router = express.Router();
 
@@ -29,18 +30,45 @@ const singleUpload = upload.single("image");
 //   });
 // };
 /**
- *  GET Endpoint - /skatespots
+ *  Route - /api/v1/skatespots
+ *    GET Endpoint 
+ *      - gets a list of all skate spots
+ *    POST Endpoint
+ *      - creates a new skate spot
  */
-// router.get(
-//   "/",
-//   asyncHandler(async (_, res, next) => {
-//     const skateSpots = await SkateSpots.findAll();
+router.route("/")
+  .get(
+  requireAuth,
+  asyncHandler(async (_, res) => {
+    const skateSpots = await SkateSpot.findAll({
+      order: [["createdAt", "DESC"]]
+    });
 
-//     // skate spot validation
+    res.json({ skateSpots });
+  }))
+  .post(
+    requireAuth,
+    asyncHandler(async (req, res) => {
+      const { 
+        name,
+        city,
+        state,
+        address,
+        imgs
+      } = req.body;
 
-//     res.json({ skateSpots });
-//   })
-// );
+      console.log(name, city, state, img)
+      const skateSpot = await SkateSpot.create({
+        name,
+        city, 
+        state,
+        address,
+        imgs
+      });
+
+      res.status(201).json({ skateSpot })
+    })
+  );
 
 // /**
 //  *  POST Endpoint - /skatespots/:id/clips
@@ -72,10 +100,11 @@ const singleUpload = upload.single("image");
 // );
 
 /**
- *  POST Endpoint - /skatespots/:id/upload
+ *  POST Endpoint - api/v1/skatespots/:id/upload
  */
 router.post(
   // change to id
+  // need authentication
   "/upload",
   (req, res) => {
     singleUpload(req, res, (err) => {
@@ -86,8 +115,7 @@ router.post(
             errors: [{ title: "Image Upload Error", detail: err.message }],
           });
       }
-      console.log(req);
-      return res.json({ "imageUrl": req.file });
+      return res.json({ "imageUrl": req.file.location });
     });
   }
 );
