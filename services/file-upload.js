@@ -13,15 +13,19 @@ const s3 = new aws.S3();
 const upload = multer({
   storage: multerS3({
     s3,
-    bucket: "abd-bucket-dev",
+    bucket: process.env.S3_BUCKET,
     acl: "public-read",
     metadata: (req, file, cb) => {
+      console.log("req*************", req);
+      console.log("file------------------", file);
       cb(null, {fieldName: "TESTING_METADATA"});
     },
     key: (req, file, cb) => {
+      console.log("req*************", req);
+      console.log("file------------------", file);
       cb(null, Date.now().toString())
     }
   })
-})
+});
 
 module.exports = upload;
