@@ -1,34 +1,13 @@
 const express = require("express");
 const asyncHandler = require("express-async-handler");
 const { requireAuth } = require("../../../auth");
-const { SkateSpot, SkateClips } = require("../../../db/models");
+const { SkateSpot, SkateClip } = require("../../../db/models");
 const upload = require("../../../services/file-upload");
-// console.log(upload);
+
 const router = express.Router();
 
 const singleUpload = upload.single("image");
 
-// const uploadFile = (source, targetName, res) => {
-//   console.log("preparing to upload...");
-//   fs.readFile(source, (err, fileData) => {
-//     if (!err) {
-//       const putParams = {
-//         Bucket: "abdbucket",
-//         Key: "",
-//         Body: fileData
-//       };
-
-//       s3.putObject(putParams, (err, data) => {
-//         if (err) {
-//           console.log(`Could not upload the file. Error: ${err}`);
-//           return res.send({ success: false });
-//         } else {
-//           fs.unlink
-//         }
-//       });
-//     }
-//   });
-// };
 /**
  *  Route - /api/v1/skatespots
  *    GET Endpoint 
@@ -47,28 +26,47 @@ router.route("/")
     res.json({ skateSpots });
   }))
   .post(
-    requireAuth,
-    asyncHandler(async (req, res) => {
-      const { 
-        name,
-        city,
-        state,
-        address,
-        imgs
-      } = req.body;
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const { 
+      name,
+      city,
+      state,
+      address,
+      imgs
+    } = req.body;
 
-      console.log(name, city, state, img)
-      const skateSpot = await SkateSpot.create({
-        name,
-        city, 
-        state,
-        address,
-        imgs
+    console.log(name, city, state, imgs)
+    const skateSpot = await SkateSpot.create({
+      name,
+      city, 
+      state,
+      address,
+      imgs
+    });
+
+    res.status(201).json({ skateSpot })
+  })
+);
+
+/**
+ *  ROUTE - /api/v1/skatespots/:id
+ *    GET - get details of a skate spot
+ */
+router.get(
+  "/:id(\\d+)",
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const skateSpotDetails = await SkateSpot.findByPk(
+      req.params.id, {
+        include: [{
+          model: SkateClip
+        }]
       });
 
-      res.status(201).json({ skateSpot })
-    })
-  );
+    res.json(skateSpotDetails);
+  })
+);
 
 // /**
 //  *  POST Endpoint - /skatespots/:id/clips
