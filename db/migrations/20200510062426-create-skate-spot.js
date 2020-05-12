@@ -25,11 +25,9 @@ module.exports = {
         type: Sequelize.STRING(50)
       },
       lat: {
-        allowNull: false,
         type: Sequelize.FLOAT
       },
       lng: {
-        allowNull: false,
         type: Sequelize.FLOAT
       },
       imgs: {
