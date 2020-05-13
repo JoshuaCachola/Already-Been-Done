@@ -1,5 +1,6 @@
 const express = require("express");
 const asyncHandler = require("express-async-handler");
+const aws = require("aws-sdk");
 const { requireAuth } = require("../../../auth");
 const { SkateSpot, SkateClip } = require("../../../db/models");
 const upload = require("../../../services/file-upload");
@@ -106,6 +107,7 @@ router.post(
   "/upload",
   (req, res) => {
     singleUpload(req, res, (err) => {
+      console.log(req);
       if (err) {
         return res
           .status(422)
@@ -117,5 +119,34 @@ router.post(
     });
   }
 );
+
+// router.get(
+//   "/sign-s3",
+//   (req, res) => {
+//     const s3 = new aws.S3();
+//     const fileName = req.query["file-name"];
+//     const fileType = req.query["file-type"];
+//     const s3Params = {
+//       Bucket: "abd-bucket-dev",
+//       Key: fileName,
+//       expires: 60,
+//       ContentType: fileType,
+//       ACL: "public-read"
+//     };
+
+//     s3.getSignedUrl("putObject", s3Params, (err, data) => {
+//       if (err) {
+//         console.log(err);
+//         return res.end();
+//       }
+
+//       const returnData = {
+//         signedRequest: data,
+//         url: `https://${s3Params.Bucket}.s3-us-west-1.amazonaws.com/${fileName}`
+//       };
+//       res.json(returnData);
+//     })
+//   }
+// );
 
 module.exports = router;
