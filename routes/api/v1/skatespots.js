@@ -120,6 +120,9 @@ router.post(
   }
 );
 
+/**
+ *  ROUTE - /api/v1/skatespots/:id/posts
+ */
 // router.get(
 //   "/sign-s3",
 //   (req, res) => {
