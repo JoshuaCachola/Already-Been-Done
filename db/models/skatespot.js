@@ -28,7 +28,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {});
   SkateSpot.associate = function (models) {
-    // associations can be defined here
+    SkateSpot.hasMany(models.SkatePost, {
+      foreignKey: "skateSpotPostId"
+    });
   };
   return SkateSpot;
 };

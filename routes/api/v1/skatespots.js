@@ -10,44 +10,44 @@ const singleUpload = upload.single("image");
 
 /**
  *  Route - /api/v1/skatespots
- *    GET Endpoint 
+ *    GET Endpoint
  *      - gets a list of all skate spots
  *    POST Endpoint
  *      - creates a new skate spot
  */
 router.route("/")
   .get(
-  requireAuth,
-  asyncHandler(async (_, res) => {
-    const skateSpots = await SkateSpot.findAll({
-      order: [["createdAt", "DESC"]]
-    });
+    requireAuth,
+    asyncHandler(async (_, res) => {
+      const skateSpots = await SkateSpot.findAll({
+        order: [["createdAt", "DESC"]]
+      });
 
-    res.json({ skateSpots });
-  }))
+      res.json({ skateSpots });
+    }))
   .post(
-  requireAuth,
-  asyncHandler(async (req, res) => {
-    const { 
-      name,
-      city,
-      state,
-      address,
-      imgs
-    } = req.body;
+    requireAuth,
+    asyncHandler(async (req, res) => {
+      const {
+        name,
+        city,
+        state,
+        address,
+        imgs
+      } = req.body;
 
-    console.log(name, city, state, imgs)
-    const skateSpot = await SkateSpot.create({
-      name,
-      city, 
-      state,
-      address,
-      imgs
-    });
+      console.log(name, city, state, imgs)
+      const skateSpot = await SkateSpot.create({
+        name,
+        city,
+        state,
+        address,
+        imgs
+      });
 
-    res.status(201).json({ skateSpot })
-  })
-);
+      res.status(201).json({ skateSpot })
+    })
+  );
 
 /**
  *  ROUTE - /api/v1/skatespots/:id
@@ -59,10 +59,10 @@ router.get(
   asyncHandler(async (req, res) => {
     const skateSpotDetails = await SkateSpot.findByPk(
       req.params.id, {
-        include: [{
-          model: SkateClip
-        }]
-      });
+      include: [{
+        model: SkateClip
+      }]
+    });
 
     res.json(skateSpotDetails);
   })

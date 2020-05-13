@@ -7,7 +7,7 @@ module.exports = {
       [
         {
           name: "3rd and Army",
-          address: "1698 Indiana St, San Francisco, CA 94124",
+          address: "1698 Indiana St",
           city: "San Francisco",
           state: "California",
           lat: 37.750294,
@@ -33,7 +33,7 @@ module.exports = {
         },
         {
           name: "Pier 7",
-          address: "Pier 7, San Francisco CA, 94105",
+          address: "Pier 7",
           city: "San Francisco",
           state: "California",
           lat: 7.7986599,

@@ -32,7 +32,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {});
   Skater.associate = function (models) {
-
+    Skater.hasMany(models.SkatePost, {
+      foreignKey: "skaterId"
+    });
   };
 
   Skater.prototype.validatePassword = function (password) {
