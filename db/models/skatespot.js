@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   SkateSpot.associate = function (models) {
     SkateSpot.hasMany(models.SkatePost, {
-      foreignKey: "skateSpotPostId"
+      foreignKey: "skateSpotId"
     });
   };
   return SkateSpot;

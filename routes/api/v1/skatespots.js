@@ -74,7 +74,7 @@ router.post(
   // change to id
   // need authentication
   "/upload",
-  requireAuth,
+  // requireAuth,
   asyncHandler(async (req, res, next) => {
     singleUpload(req, res, (err) => {
       console.log(req);
@@ -120,14 +120,14 @@ router.route("/:id(\\d+)/posts")
         caption
       } = req.body;
 
-      const post = await SkatePost.create({
+      const skatePost = await SkatePost.create({
         post,
         caption,
         skaterId: req.skater.id,
         skateSpotId
       });
 
-      res.status(201).json({ post })
+      res.status(201).json(skatePost)
     })
   );
 
