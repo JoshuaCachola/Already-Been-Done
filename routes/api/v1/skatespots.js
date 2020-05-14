@@ -1,12 +1,10 @@
 const express = require("express");
 const asyncHandler = require("express-async-handler");
-const aws = require("aws-sdk");
 const { requireAuth } = require("../../../auth");
-const { SkateSpot, SkateClip } = require("../../../db/models");
+const { SkateSpot, SkatePost } = require("../../../db/models");
 const upload = require("../../../services/file-upload");
 
 const router = express.Router();
-
 const singleUpload = upload.single("image");
 
 /**
@@ -69,35 +67,6 @@ router.get(
   })
 );
 
-// /**
-//  *  POST Endpoint - /skatespots/:id/clips
-//  */
-// router.post(
-//   "/:id/clips",
-//   asyncHandler(async (req, res, next) => {
-//     const {
-//       clipPath,
-//       clipName,
-//       clipCaption,
-//       skaterId
-//     } = req.body;
-//     const id = parseInt(req.params.id, 10);
-
-//     // **** may need csrfProtection
-
-//     const clip = {
-//       clipPath,
-//       clipName,
-//       clipCaption,
-//       skaterId
-//     };
-
-//     const skateClip = await SkateClips.create(clip);
-
-//     res.status(201).json({ skateClip });
-//   })
-// );
-
 /**
  *  POST Endpoint - api/v1/skatespots/:id/upload
  */
@@ -105,57 +74,61 @@ router.post(
   // change to id
   // need authentication
   "/upload",
-  (req, res) => {
+  requireAuth,
+  asyncHandler(async (req, res, next) => {
     singleUpload(req, res, (err) => {
       console.log(req);
       if (err) {
-        return res
-          .status(422)
-          .send({
-            errors: [{ title: "Image Upload Error", detail: err.message }],
-          });
+        // return res
+        //   .status(422)
+        //   .send({
+        //     errors: [{ title: "Image Upload Error", detail: err.message }],
+        //   });
+        next(err);
       }
       return res.json({ "imageUrl": req.file.location });
     });
-  }
+  })
 );
 
 /**
  *  ROUTE - /api/v1/skatespots/:id/posts
+ *    GET
+ *      - Gets all the posts for the skate spot
+ *    POST 
+ *      - Creates a new list for the skate spot
  */
-router.get(
-  "/:id(\\d+)/posts",
-  asyncHandler(async (req, res) => {
-    
-  })
-);
-// router.get(
-//   "/sign-s3",
-//   (req, res) => {
-//     const s3 = new aws.S3();
-//     const fileName = req.query["file-name"];
-//     const fileType = req.query["file-type"];
-//     const s3Params = {
-//       Bucket: "abd-bucket-dev",
-//       Key: fileName,
-//       expires: 60,
-//       ContentType: fileType,
-//       ACL: "public-read"
-//     };
+router.route("/:id(\\d+)/posts")
+  .get(
+    requireAuth,
+    asyncHandler(async (req, res) => {
+      const skateSpotId = parseInt(req.params.id, 10);
+      const posts = await SkatePost.findAll({
+        where: {
+          skateSpotId
+        }
+      });
+      console.log(posts);
+      res.json(posts);
+    })
+  ).post(
+    requireAuth,
+    asyncHandler(async (req, res) => {
+      const skateSpotId = parseInt(req.params.id, 10);
+      const {
+        post,
+        caption
+      } = req.body;
 
-//     s3.getSignedUrl("putObject", s3Params, (err, data) => {
-//       if (err) {
-//         console.log(err);
-//         return res.end();
-//       }
+      const post = await SkatePost.create({
+        post,
+        caption,
+        skaterId: req.skater.id,
+        skateSpotId
+      });
 
-//       const returnData = {
-//         signedRequest: data,
-//         url: `https://${s3Params.Bucket}.s3-us-west-1.amazonaws.com/${fileName}`
-//       };
-//       res.json(returnData);
-//     })
-//   }
-// );
+      res.status(201).json({ post })
+    })
+  );
 
 module.exports = router;
