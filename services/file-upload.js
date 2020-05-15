@@ -10,23 +10,37 @@ aws.config.update({
 
 const s3 = new aws.S3();
 
-const upload = multer({
+const uploadVideo = multer({
   storage: multerS3({
     s3,
     bucket: process.env.S3_BUCKET,
     contentType: multerS3.AUTO_CONTENT_TYPE,
     acl: "public-read",
     metadata: (req, file, cb) => {
-      console.log("req*************", req);
-      console.log("file------------------", file);
-      cb(null, {fieldName: "TESTING_METADATA"});
+      cb(null, { fieldName: "TESTING_METADATA" });
     },
     key: (req, file, cb) => {
-      console.log("req*************", req);
-      console.log("file------------------", file);
       cb(null, `${Date.now().toString()}.mp4`)
     },
   })
 });
 
-module.exports = upload;
+const uploadPicture = multer({
+  storage: multerS3({
+    s3,
+    bucket: process.env.S3_BUCKET,
+    contentType: multerS3.AUTO_CONTENT_TYPE,
+    acl: "public-read",
+    metadata: (req, file, cb) => {
+      cb(null, { fieldName: "TESTING_METADATA" });
+    },
+    key: (req, file, cb) => {
+      cb(null, Date.now().toString())
+    },
+  })
+});
+
+module.exports = {
+  uploadPicture,
+  uploadVideo
+};

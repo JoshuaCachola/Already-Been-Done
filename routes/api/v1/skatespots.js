@@ -2,11 +2,12 @@ const express = require("express");
 const asyncHandler = require("express-async-handler");
 const { requireAuth } = require("../../../auth");
 const { SkateSpot, SkatePost } = require("../../../db/models");
-const upload = require("../../../services/file-upload");
-
+const { uploadPicture } = require("../../../services/file-upload");
+const { uploadVideo } = require("../../../services/file-upload");
 const router = express.Router();
-const singleUpload = upload.single("image");
 
+const singleUploadPicture = uploadPicture.single("image");
+const singleUploadVideo = uploadVideo.single("video");
 /**
  *  Route - /api/v1/skatespots
  *    GET Endpoint
@@ -68,15 +69,15 @@ router.get(
 );
 
 /**
- *  POST Endpoint - api/v1/skatespots/:id/upload
+ *  POST Endpoint - api/v1/skatespots/:id/upload-picture
  */
 router.post(
   // change to id
   // need authentication
-  "/upload",
+  "/upload-image",
   // requireAuth,
   asyncHandler(async (req, res, next) => {
-    singleUpload(req, res, (err) => {
+    singleUploadPicture(req, res, (err) => {
       console.log(req);
       if (err) {
         // return res
@@ -86,7 +87,31 @@ router.post(
         //   });
         next(err);
       }
-      return res.json({ "imageUrl": req.file.location });
+      return res.json({ "postUrl": req.file.location });
+    });
+  })
+);
+
+/**
+ *  POST Endpoint - api/v1/skatespots/:id/upload-video
+ */
+router.post(
+  // change to id
+  // need authentication
+  "/upload-video",
+  // requireAuth,
+  asyncHandler(async (req, res, next) => {
+    singleUploadVideo(req, res, (err) => {
+      console.log(req);
+      if (err) {
+        // return res
+        //   .status(422)
+        //   .send({
+        //     errors: [{ title: "Image Upload Error", detail: err.message }],
+        //   });
+        next(err);
+      }
+      return res.json({ "postUrl": req.file.location });
     });
   })
 );
@@ -114,11 +139,11 @@ router.route("/:id(\\d+)/posts")
   ).post(
     requireAuth,
     asyncHandler(async (req, res) => {
-      //   const skateSpotId = parseInt(req.params.id, 10);
-      //   const {
-      //     post,
-      //     caption
-      //   } = req.body;
+      const skateSpotId = parseInt(req.params.id, 10);
+      const {
+        post,
+        caption
+      } = req.body;
 
       const skatePost = await SkatePost.create({
         post,
