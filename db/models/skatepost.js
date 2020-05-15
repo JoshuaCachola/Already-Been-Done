@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const SkatePost = sequelize.define('SkatePost', {
     post: {
       allowNull: false,
-      type: DataTypes.STRING,
+      type: DataTypes.ARRAY(DataTypes.STRING(255)),
     },
     skateSpotId: {
       allowNull: false,
@@ -18,12 +18,16 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {});
   SkatePost.associate = function (models) {
-    SkatePost.belongsTo(models.SkatePost, {
+    SkatePost.belongsTo(models.SkateSpot, {
       foreignKey: "skateSpotId"
     });
 
     SkatePost.belongsTo(models.Skater, {
       foreignKey: "skaterId"
+    });
+
+    SkatePost.hasMany(models.SkatePostComment, {
+      foreignKey: "skatePostId"
     });
   };
   return SkatePost;

@@ -31,8 +31,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(50),
     }
   }, {});
+
   Skater.associate = function (models) {
     Skater.hasMany(models.SkatePost, {
+      foreignKey: "skaterId"
+    });
+
+    Skater.hasMany(models.SkatePostComment, {
       foreignKey: "skaterId"
     });
   };

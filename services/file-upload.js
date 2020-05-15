@@ -14,6 +14,7 @@ const upload = multer({
   storage: multerS3({
     s3,
     bucket: process.env.S3_BUCKET,
+    contentType: multerS3.AUTO_CONTENT_TYPE,
     acl: "public-read",
     metadata: (req, file, cb) => {
       console.log("req*************", req);
@@ -23,8 +24,8 @@ const upload = multer({
     key: (req, file, cb) => {
       console.log("req*************", req);
       console.log("file------------------", file);
-      cb(null, Date.now().toString())
-    }
+      cb(null, `${Date.now().toString()}.mp4`)
+    },
   })
 });
 
