@@ -6,7 +6,9 @@
   "scripts": {
     "db:create": "dotenv sequelize-cli db:create",
     "dev": "dotenv nodemon ./bin/www",
-    "start": "dotenv ./bin/www"
+    "start": "dotenv ./bin/www",
+    "start:development": "nodemon -r dotenv/config index.js",
+    "start:production": "node index.js"
   },
   "repository": {
     "type": "git",
