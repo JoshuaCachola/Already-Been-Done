@@ -34,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Skater.associate = function (models) {
     Skater.hasMany(models.SkatePost, {
+      as: "skater",
       foreignKey: "skaterId"
     });
 

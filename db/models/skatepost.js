@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     SkatePost.belongsTo(models.Skater, {
+      as: "skater",
       foreignKey: "skaterId"
     });
 

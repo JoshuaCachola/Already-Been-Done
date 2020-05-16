@@ -1,7 +1,7 @@
 const express = require("express");
 const asyncHandler = require("express-async-handler");
 const { requireAuth } = require("../../../auth");
-const { SkateSpot, SkatePost } = require("../../../db/models");
+const { SkateSpot, SkatePost, Skater } = require("../../../db/models");
 const { uploadPicture } = require("../../../services/file-upload");
 const { uploadVideo } = require("../../../services/file-upload");
 const router = express.Router();
@@ -131,7 +131,12 @@ router.route("/:id(\\d+)/posts")
       const posts = await SkatePost.findAll({
         where: {
           skateSpotId
-        }
+        },
+        include: [{
+          model: Skater,
+          as: "skater",
+          attributes: ["firstName", "lastName", "username"],
+        }]
       });
       console.log(posts);
       res.json(posts);
