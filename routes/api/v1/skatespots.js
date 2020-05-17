@@ -1,7 +1,7 @@
 const express = require("express");
 const asyncHandler = require("express-async-handler");
 const { requireAuth } = require("../../../auth");
-const { SkateSpot, SkatePost, Skater } = require("../../../db/models");
+const { SkateSpot, SkatePost, Skater, SkatePostComment } = require("../../../db/models");
 const { uploadPicture } = require("../../../services/file-upload");
 const { uploadVideo } = require("../../../services/file-upload");
 const router = express.Router();
@@ -138,7 +138,7 @@ router.route("/:id(\\d+)/posts")
           attributes: ["firstName", "lastName", "username"],
         }]
       });
-      console.log(posts);
+      // console.log(posts);
       res.json(posts);
     })
   ).post(
@@ -160,5 +160,46 @@ router.route("/:id(\\d+)/posts")
       res.status(201).json(skatePost)
     })
   );
+
+/**
+ *  Route - /api/v1/skatespots/:skatespotid/posts/:skatepostid/comments
+ *    GET - get comments for post
+ *    POST - post comments for 
+ */
+router.route("/:skatespotid(\\d+)/posts/:skatepostid(\\d+)/comments")
+    .get(
+      requireAuth,
+      asyncHandler(async(req, res) => {
+        const skatePostId = parseInt(req.params.skatepostid, 10);
+        const comments = await SkatePostComment.findAll({
+          where: {
+            skatePostId
+          },
+          include: [{
+            model: Skater,
+            as: "skaterCommenter",
+            attributes: ["username"],
+          }]
+        });
+
+        console.log(comments);
+        res.json(comments);
+      })
+    ).post(
+      requireAuth,
+      asyncHandler(async(req, res) => {
+        const skatePostId = parseInt(req.params.skatepostid, 10);
+        const skaterId = req.skater.id;
+        const { comment } = req.body;
+
+        const postComment = await SkatePostComment.create({
+          comment,
+          skatePostId,
+          skaterId
+        });
+
+        res.status(201).json(postComment);
+      })
+    );
 
 module.exports = router;

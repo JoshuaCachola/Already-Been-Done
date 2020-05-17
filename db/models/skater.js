@@ -39,6 +39,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     Skater.hasMany(models.SkatePostComment, {
+      as: "skaterCommenter",
       foreignKey: "skaterId"
     });
   };

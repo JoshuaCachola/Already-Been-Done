@@ -21,8 +21,10 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     SkatePostComment.belongsTo(models.Skater, {
+      as: "skaterCommenter",
       foreignKey: "skaterId"
     });
+
   };
   return SkatePostComment;
 };
