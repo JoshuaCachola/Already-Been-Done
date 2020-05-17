@@ -78,7 +78,6 @@ router.post(
   // requireAuth,
   asyncHandler(async (req, res, next) => {
     singleUploadPicture(req, res, (err) => {
-      console.log(req);
       if (err) {
         // return res
         //   .status(422)
@@ -102,7 +101,6 @@ router.post(
   // requireAuth,
   asyncHandler(async (req, res, next) => {
     singleUploadVideo(req, res, (err) => {
-      console.log(req);
       if (err) {
         // return res
         //   .status(422)
