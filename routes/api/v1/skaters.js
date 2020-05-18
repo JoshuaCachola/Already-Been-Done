@@ -2,25 +2,13 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
 const { Skater } = require("../../../db/models");
-const { getSkaterToken, requireAuth } = require("../../../auth");
+const { getSkaterToken } = require("../../../auth");
 const {
   /* validateUserSignUp, */
   validateUsernameAndPassword
 } = require("../../../validations");
 
 const router = express.Router();
-
-/**
- *  POST endpoint - /skaters
- *    - skater sign up
- */
-// router.post(
-//   "/",
-//   validateUserSignUp,
-//   asyncHandler(async (req, res) => {
-
-//   })
-// );
 
 /**
  *  POST endpoint - /skaters/session
@@ -49,7 +37,42 @@ router.post(
     const token = getSkaterToken(skater);
     res.json({
       token,
-      // skater: { id: skater.id }
+    });
+  })
+);
+
+/**
+ *  Route - "/api/v1/skater/signup"
+ *    POST
+ *      - user sign up
+ */
+router.post(
+  "/signup",
+  asyncHandler(async (req, res) => {
+    const {
+      username,
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      password
+    } = req.body;
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const skater = await Skater.create({
+      username,
+      firstName, 
+      lastName,
+      email,
+      phoneNumber, 
+      hashedPassword
+    });
+
+    const token = getSkaterToken(skater);
+
+    res.status(201).json({
+      skater: { id: skater.id },
+      token
     });
   })
 );
