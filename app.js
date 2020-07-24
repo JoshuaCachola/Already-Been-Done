@@ -4,7 +4,6 @@ const express = require("express");
 const logger = require("morgan");
 const helmet = require("helmet");
 const path = require("path");
-// const { api, port } = require("./config");
 
 const routes = require("./routes");
 
@@ -17,12 +16,6 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
-
-//middleware for custom render
-// app.use((req, res, next) => {
-//   res.locals.api = api;
-//   next();
-// });
 
 // Mount routers
 app.use(routes);
@@ -41,7 +34,7 @@ app.use((err, req, res, next) => {
     title: err.title || "Server Error",
     message: err.message,
     errors: err.errors,
-    stack: isProduction ? null : err.stack
+    stack: isProduction ? null : err.stack,
   });
 });
 

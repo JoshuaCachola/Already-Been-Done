@@ -3,13 +3,29 @@
 const app = require("../app");
 const debug = require("debug")("starter:server");
 const http = require("http");
+const socketIO = require("socket.io");
 
 // Get port from environment and store in Express
-const port = normalizePort(process.env.PORT || '8008');
+const port = normalizePort(process.env.PORT || "8008");
 app.set("port", port);
 
 // create HTTP server
 const server = http.createServer(app);
+
+// create socket io instance with server
+const io = socketIO(server);
+
+io.on("connect", (socket) => {
+  console.log("User connected");
+
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
+
+  socket.on("message", (msg) => {
+    socket.emit("message", msg);
+  });
+});
 
 // Listen on provided port, on all network interfaces
 server.listen(port);
@@ -29,7 +45,7 @@ function normalizePort(val) {
   }
 
   return false;
-};
+}
 
 // Event listener for HTTP server "error" event
 function onError(error) {
@@ -37,9 +53,7 @@ function onError(error) {
     throw error;
   }
 
-  const bind = typeof port === "string"
-    ? "Pipe " + port
-    : "Port " + port;
+  const bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -54,14 +68,13 @@ function onError(error) {
     default:
       throw error;
   }
-};
+}
 
 // Event listener for HTTP server "listening" event
 
 function onListening() {
   const address = server.address();
-  const bind = typeof address === "string"
-    ? "pipe " + address
-    : "port " + address;
+  const bind =
+    typeof address === "string" ? "pipe " + address : "port " + address;
   debug("Listening on " + bind);
 }
