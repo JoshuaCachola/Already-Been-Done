@@ -36,6 +36,7 @@ router.post(
 
     const token = getSkaterToken(skater);
     res.json({
+      id: skater.id,
       token,
     });
   })
@@ -61,10 +62,10 @@ router.post(
     const hashedPassword = await bcrypt.hash(password, 10);
     const skater = await Skater.create({
       username,
-      firstName, 
+      firstName,
       lastName,
       email,
-      phoneNumber, 
+      phoneNumber,
       hashedPassword
     });
 

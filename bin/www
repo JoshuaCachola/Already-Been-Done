@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-
 const app = require("../app");
 const debug = require("debug")("starter:server");
 const http = require("http");
 const socketIO = require("socket.io");
 
+const connectedUsers = {};
 // Get port from environment and store in Express
 const port = normalizePort(process.env.PORT || "8008");
 app.set("port", port);
@@ -20,6 +20,10 @@ io.on("connect", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("user disconnected");
+  });
+
+  socket.on("logged-in", userId => {
+    connectedUsers[userId] = socket.id;
   });
 
   socket.on("message", (msg) => {
