@@ -1,7 +1,13 @@
 const express = require("express");
 const asyncHandler = require("express-async-handler");
 const { requireAuth } = require("../../../auth");
-const { SkateSpot, SkatePost, Skater, SkatePostComment } = require("../../../db/models");
+const {
+  SkateSpot,
+  SkatePost,
+  Skater,
+  SkatePostComment,
+  SkateSpotFollowing,
+} = require("../../../db/models");
 const { uploadPicture } = require("../../../services/file-upload");
 const { uploadVideo } = require("../../../services/file-upload");
 const router = express.Router();
@@ -15,37 +21,33 @@ const singleUploadVideo = uploadVideo.single("video");
  *    POST Endpoint
  *      - creates a new skate spot
  */
-router.route("/")
+router
+  .route("/")
   .get(
     requireAuth,
     asyncHandler(async (_, res) => {
       const skateSpots = await SkateSpot.findAll({
-        order: [["createdAt", "DESC"]]
+        order: [["createdAt", "DESC"]],
       });
 
       res.json({ skateSpots });
-    }))
+    })
+  )
   .post(
     requireAuth,
     asyncHandler(async (req, res) => {
-      const {
-        name,
-        city,
-        state,
-        address,
-        imgs
-      } = req.body;
+      const { name, city, state, address, imgs } = req.body;
 
-      console.log(name, city, state, imgs)
+      console.log(name, city, state, imgs);
       const skateSpot = await SkateSpot.create({
         name,
         city,
         state,
         address,
-        imgs
+        imgs,
       });
 
-      res.status(201).json({ skateSpot })
+      res.status(201).json({ skateSpot });
     })
   );
 
@@ -57,11 +59,12 @@ router.get(
   "/:id(\\d+)",
   requireAuth,
   asyncHandler(async (req, res) => {
-    const skateSpotDetails = await SkateSpot.findByPk(
-      req.params.id, {
-      include: [{
-        model: SkateClip
-      }]
+    const skateSpotDetails = await SkateSpot.findByPk(req.params.id, {
+      include: [
+        {
+          model: SkateClip,
+        },
+      ],
     });
 
     res.json(skateSpotDetails);
@@ -86,7 +89,7 @@ router.post(
         //   });
         next(err);
       }
-      return res.json({ "postUrl": req.file.location });
+      return res.json({ postUrl: req.file.location });
     });
   })
 );
@@ -109,7 +112,7 @@ router.post(
         //   });
         next(err);
       }
-      return res.json({ "postUrl": req.file.location });
+      return res.json({ postUrl: req.file.location });
     });
   })
 );
@@ -121,83 +124,116 @@ router.post(
  *    POST
  *      - Creates a new list for the skate spot
  */
-router.route("/:id(\\d+)/posts")
+router
+  .route("/:id(\\d+)/posts")
   .get(
     requireAuth,
     asyncHandler(async (req, res) => {
       const skateSpotId = parseInt(req.params.id, 10);
       const posts = await SkatePost.findAll({
         where: {
-          skateSpotId
+          skateSpotId,
         },
-        include: [{
-          model: Skater,
-          as: "skater",
-          attributes: ["firstName", "lastName", "username"],
-        }]
+        include: [
+          {
+            model: Skater,
+            as: "skater",
+            attributes: ["firstName", "lastName", "username"],
+          },
+        ],
       });
       // console.log(posts);
       res.json(posts);
     })
-  ).post(
+  )
+  .post(
     requireAuth,
     asyncHandler(async (req, res) => {
       const skateSpotId = parseInt(req.params.id, 10);
-      const {
-        post,
-        caption
-      } = req.body;
+      const { post, caption } = req.body;
 
       const skatePost = await SkatePost.create({
         post,
         caption,
         skaterId: req.skater.id,
-        skateSpotId
+        skateSpotId,
       });
 
-      res.status(201).json(skatePost)
+      res.status(201).json(skatePost);
     })
   );
 
 /**
  *  Route - /api/v1/skatespots/:skatespotid/posts/:skatepostid/comments
  *    GET - get comments for post
- *    POST - post comments for 
+ *    POST - post comments for
  */
-router.route("/:skatespotid(\\d+)/posts/:skatepostid(\\d+)/comments")
-    .get(
-      requireAuth,
-      asyncHandler(async(req, res) => {
-        const skatePostId = parseInt(req.params.skatepostid, 10);
-        const comments = await SkatePostComment.findAll({
-          where: {
-            skatePostId
-          },
-          include: [{
+router
+  .route("/:skatespotid(\\d+)/posts/:skatepostid(\\d+)/comments")
+  .get(
+    requireAuth,
+    asyncHandler(async (req, res) => {
+      const skatePostId = parseInt(req.params.skatepostid, 10);
+      const comments = await SkatePostComment.findAll({
+        where: {
+          skatePostId,
+        },
+        include: [
+          {
             model: Skater,
             as: "skaterCommenter",
             attributes: ["username"],
-          }]
-        });
+          },
+        ],
+      });
 
-        console.log(comments);
-        res.json(comments);
-      })
-    ).post(
-      requireAuth,
-      asyncHandler(async(req, res) => {
-        const skatePostId = parseInt(req.params.skatepostid, 10);
-        const skaterId = req.skater.id;
-        const { comment } = req.body;
+      res.json(comments);
+    })
+  )
+  .post(
+    requireAuth,
+    asyncHandler(async (req, res) => {
+      const skatePostId = parseInt(req.params.skatepostid, 10);
+      const skaterId = req.skater.id;
+      const { comment } = req.body;
 
-        const postComment = await SkatePostComment.create({
-          comment,
-          skatePostId,
-          skaterId
-        });
+      const postComment = await SkatePostComment.create({
+        comment,
+        skatePostId,
+        skaterId,
+      });
 
-        res.status(201).json(postComment);
-      })
-    );
+      res.status(201).json(postComment);
+    })
+  );
 
+/**
+ *  Route - /api/v1/skatespots/:skatespotid/follow
+ *    POST - follow skate spot
+ */
+router.post(
+  "/:skatespotid(\\d+)/follow",
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const skaterId = req.skater.id;
+    const skateSpotId = parseInt(req.params.skatepostid, 10);
+
+    const followSkateSpot = await SkateSpotFollowing.create({
+      skaterId,
+      skateSpotId,
+    });
+
+    res.status(201).json(followSkateSpot);
+  })
+);
+
+/**
+ *  Route - /api/v1/skatespots/:skatespotid/unfollow
+ *    DELETE - unfollow skate spot
+ */
+router.delete(
+  "/:skatespotid(\\d+)/unfollow",
+  requireAuth,
+  asyncHandler(async (req, res) => {})
+);
 module.exports = router;
