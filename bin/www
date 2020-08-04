@@ -16,18 +16,13 @@ const server = http.createServer(app);
 const io = socketIO(server);
 
 io.on("connect", (socket) => {
-  console.log("User connected");
-
+  // event when user disconnects
   socket.on("disconnect", () => {
     console.log("user disconnected");
   });
 
-  socket.on("logged-in", userId => {
+  socket.on("logged-in", (userId) => {
     connectedUsers[userId] = socket.id;
-  });
-
-  socket.on("message", (msg) => {
-    socket.emit("message", msg);
   });
 });
 

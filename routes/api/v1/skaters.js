@@ -5,7 +5,7 @@ const { Skater } = require("../../../db/models");
 const { getSkaterToken } = require("../../../auth");
 const {
   /* validateUserSignUp, */
-  validateUsernameAndPassword
+  validateUsernameAndPassword,
 } = require("../../../validations");
 
 const router = express.Router();
@@ -22,8 +22,8 @@ router.post(
 
     const skater = await Skater.findOne({
       where: {
-        username
-      }
+        username,
+      },
     });
 
     if (!skater || !skater.validatePassword(password)) {
@@ -56,7 +56,7 @@ router.post(
       lastName,
       email,
       phoneNumber,
-      password
+      password,
     } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -66,14 +66,14 @@ router.post(
       lastName,
       email,
       phoneNumber,
-      hashedPassword
+      hashedPassword,
     });
 
     const token = getSkaterToken(skater);
 
     res.status(201).json({
       skater: { id: skater.id },
-      token
+      token,
     });
   })
 );
