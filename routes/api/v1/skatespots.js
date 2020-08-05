@@ -216,8 +216,7 @@ router.post(
   requireAuth,
   asyncHandler(async (req, res) => {
     const skaterId = req.skater.id;
-    const skateSpotId = parseInt(req.params.skatepostid, 10);
-
+    const skateSpotId = parseInt(req.params.skatespotid, 10);
     const followSkateSpot = await SkateSpotFollowing.create({
       skaterId,
       skateSpotId,
@@ -231,9 +230,55 @@ router.post(
  *  Route - /api/v1/skatespots/:skatespotid/unfollow
  *    DELETE - unfollow skate spot
  */
-router.delete(
-  "/:skatespotid(\\d+)/unfollow",
+// router.delete(
+//   "/:skatespotid(\\d+)/unfollow",
+//   requireAuth,
+//   asyncHandler(async (req, res) => {})
+// );
+// module.exports = router;
+
+/**
+ * Route - /api/v1/skatespots/following
+ *    GET - get list of followed skate spots
+ */
+router.get(
+  "/following",
   requireAuth,
-  asyncHandler(async (req, res) => {})
+  asyncHandler(async (req, res) => {
+    const skaterId = req.skater.id;
+    const followedSkateSpots = await SkateSpotFollowing.findAll({
+      where: {
+        skaterId,
+      },
+    });
+
+    res.json(followedSkateSpots);
+  })
 );
+
+/**
+ * Route - /api/v1/skatespots/following/:skatespotid
+ *    GET - get list of posts and comments from followed skatespots
+ */
+router.get(
+  "/following/:skatespotid",
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const skateSpotId = parseInt(req.params.skatespotid, 10);
+    const skateSpotPosts = await SkatePost.findAll({
+      where: {
+        skateSpotId,
+      },
+      include: [
+        {
+          model: SkatePostComment,
+        },
+      ],
+      order: [["createdAt", "DESC"]],
+    });
+
+    res.json(skateSpotPosts);
+  })
+);
+
 module.exports = router;
