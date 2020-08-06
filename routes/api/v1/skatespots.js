@@ -272,6 +272,16 @@ router.get(
       include: [
         {
           model: SkatePostComment,
+          include: [
+            {
+              model: Skater,
+              as: "skaterCommenter"
+            }
+          ]
+        },
+        {
+          model: Skater,
+          as: "skater"
         },
       ],
       order: [["createdAt", "DESC"]],
