@@ -19,11 +19,9 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.STRING(50),
       },
-      lat: {
-        type: DataTypes.FLOAT,
-      },
-      lng: {
-        type: DataTypes.FLOAT,
+      following: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
       },
       imgs: {
         type: DataTypes.ARRAY(DataTypes.STRING(255)),

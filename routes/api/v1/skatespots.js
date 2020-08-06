@@ -221,7 +221,7 @@ router.post(
       skaterId,
       skateSpotId,
     });
-
+    SkateSpot.increment("following", { by: 1, where: { id: skateSpotId } });
     res.status(201).json(followSkateSpot);
   })
 );
@@ -275,13 +275,13 @@ router.get(
           include: [
             {
               model: Skater,
-              as: "skaterCommenter"
-            }
-          ]
+              as: "skaterCommenter",
+            },
+          ],
         },
         {
           model: Skater,
-          as: "skater"
+          as: "skater",
         },
       ],
       order: [["createdAt", "DESC"]],
