@@ -230,12 +230,20 @@ router.post(
  *  Route - /api/v1/skatespots/:skatespotid/unfollow
  *    DELETE - unfollow skate spot
  */
-// router.delete(
-//   "/:skatespotid(\\d+)/unfollow",
-//   requireAuth,
-//   asyncHandler(async (req, res) => {})
-// );
-// module.exports = router;
+router.delete(
+  "/:skatespotid(\\d+)/unfollow",
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const skateSpotId = parseInt(req.params.skatespotid, 10);
+    const skaterId = req.skater.id;
+    await SkateSpotFollowing.destroy({
+      where: { skateSpotId, skaterId }
+    });
+
+    SkateSpot.decrement("following", { by: 1, where: { id: skateSpotId } });
+    res.status(201);
+  })
+);
 
 /**
  * Route - /api/v1/skatespots/following
