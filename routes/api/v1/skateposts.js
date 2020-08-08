@@ -48,4 +48,23 @@ router.delete(
   })
 );
 
+/**
+ * Route - /api/v1/skateposts/boardtaps
+ *    GET - get all board tapped posts
+ */
+router.get(
+  "/boardtaps",
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const skaterId = req.skater.id;
+    const boardTappedPosts = await LikedPost.findAll({
+      where: {
+        skaterId,
+      },
+    });
+
+    res.json(boardTappedPosts);
+  })
+);
+
 module.exports = router;
