@@ -265,6 +265,27 @@ router.get(
 );
 
 /**
+ * Route - /api/v1/skatespots/:skatespotid/following
+ *    GET - get list of followed skate spots
+ */
+router.get(
+  "/:skatespotid/following",
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const skaterId = req.skater.id;
+    const skateSpotId = parseInt(req.params.skatespotid, 10);
+    const followedSkateSpots = await SkateSpotFollowing.findOne({
+      where: {
+        skaterId,
+        skateSpotId,
+      },
+    });
+
+    res.json(followedSkateSpots);
+  })
+);
+
+/**
  * Route - /api/v1/skatespots/following/:skatespotid
  *    GET - get list of posts and comments from followed skatespots
  */
