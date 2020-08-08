@@ -237,11 +237,11 @@ router.delete(
     const skateSpotId = parseInt(req.params.skatespotid, 10);
     const skaterId = req.skater.id;
     await SkateSpotFollowing.destroy({
-      where: { skateSpotId, skaterId }
+      where: { skateSpotId, skaterId },
     });
 
     SkateSpot.decrement("following", { by: 1, where: { id: skateSpotId } });
-    res.status(201);
+    res.status(201).json({ delete: true });
   })
 );
 
