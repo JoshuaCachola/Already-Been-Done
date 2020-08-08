@@ -54,6 +54,10 @@ module.exports = (sequelize, DataTypes) => {
     Skater.hasMany(models.SkateSpotFollowing, {
       foreignKey: "skaterId",
     });
+
+    Skater.hasMany(models.SkatePost, {
+      foreignKey: "skaterId",
+    });
   };
 
   Skater.prototype.validatePassword = function (password) {

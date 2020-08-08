@@ -3,8 +3,14 @@ module.exports = (sequelize, DataTypes) => {
   const SkateSpotFollowing = sequelize.define(
     "SkateSpotFollowing",
     {
-      skaterId: DataTypes.INTEGER,
-      skateSpotId: DataTypes.INTEGER,
+      skaterId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      skateSpotId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
     },
     {}
   );
