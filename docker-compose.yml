@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+  backend:
+    build: .
+    environment:
+      DATABASE_URL: postgres://abd_app:alreadybeendone@db:5432/abd
+      NODE_ENV: production
+    depends_on:
+      - "db"
+    command: ["./wait-for", "postgres:5432"]
+    networks:
+      backend:
+    ports:
+      - "8080:8080"
+
+  db:
+    image: postgres:12-alpine
+    environment:
+      POSTGRES_USER: abd_app
+      POSTGRES_PASSWORD: alreadybeendone
+      POSTGRES_DB: abd
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+    networks:
+      backend:
+
+networks:
+  backend:
+  frontend:
+
+volumes:
+  postgres-db:
