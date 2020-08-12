@@ -76,7 +76,7 @@ router.get(
   requireAuth,
   asyncHandler(async (req, res) => {
     const skaterId = req.skater.id;
-    const skatePosts = await SkatePost.findAll({
+    const skatePosts = await SkatePost.finaAll({
       where: {
         skaterId,
       },
