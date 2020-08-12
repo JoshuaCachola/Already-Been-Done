@@ -67,4 +67,24 @@ router.get(
   })
 );
 
+/**
+ * Route - /api/v1/skateposts
+ *    GET - get all skateposts for specific skater
+ */
+router.get(
+  "/",
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const skaterId = req.skater.id;
+    const skatePosts = await SkatePost.findAll({
+      where: {
+        skaterId,
+      },
+      order: [["createdAt", "DESC"]],
+    });
+
+    res.json(skatePosts);
+  })
+);
+
 module.exports = router;
