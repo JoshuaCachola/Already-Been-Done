@@ -7,6 +7,7 @@ const {
   /* validateUserSignUp, */
   validateUsernameAndPassword,
 } = require("../../../validations");
+const { requireAuth } = require("../../../auth");
 
 const router = express.Router();
 
@@ -75,6 +76,25 @@ router.post(
       skater: { id: skater.id },
       token,
     });
+  })
+);
+
+/**
+ * Route - "/api/v1/skaters/:skaterid"
+ *    GET - get skater profile info
+ */
+router.get(
+  "/:skaterid(\\d+)",
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const skaterId = parseInt(req.params.skaterid, 10);
+    const skater = await Skater.findOne({
+      where: {
+        id: skaterId,
+      },
+    });
+
+    res.json(skater);
   })
 );
 

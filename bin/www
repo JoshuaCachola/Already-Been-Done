@@ -4,9 +4,10 @@ const debug = require("debug")("starter:server");
 const http = require("http");
 const socketIO = require("socket.io");
 
-const connectedUsers = {};
+// const connectedUsers = {};
+
 // Get port from environment and store in Express
-const port = normalizePort(process.env.PORT || "8008");
+const port = normalizePort(process.env.PORT || "8080");
 app.set("port", port);
 
 // create HTTP server

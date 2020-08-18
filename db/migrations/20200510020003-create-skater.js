@@ -31,6 +31,9 @@ module.exports = {
       phoneNumber: {
         type: Sequelize.STRING,
       },
+      accountPhoto: {
+        type: Sequelize.STRING(255),
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

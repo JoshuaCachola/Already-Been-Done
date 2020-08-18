@@ -38,13 +38,13 @@ router
     asyncHandler(async (req, res) => {
       const { name, city, state, address, imgs } = req.body;
 
-      console.log(name, city, state, imgs);
       const skateSpot = await SkateSpot.create({
         name,
         city,
         state,
         address,
         imgs,
+        following: 0,
       });
 
       res.status(201).json({ skateSpot });
