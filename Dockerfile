@@ -14,6 +14,7 @@ RUN npm ci --only=production
 
 # Adding environment variables
 ENV NODE_ENV=production
+ENV DATABASE_URL=postgres://abd_app:alreadybeendone@db:5432/abd
 # Bundle app source
 COPY . .
 

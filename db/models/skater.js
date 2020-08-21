@@ -29,9 +29,6 @@ module.exports = (sequelize, DataTypes) => {
       accountPhoto: {
         type: DataTypes.STRING(255),
       },
-      // crewId: {
-      //   type: DataTypes.INTEGER,
-      // },
       phoneNumber: {
         type: DataTypes.STRING(50),
       },
