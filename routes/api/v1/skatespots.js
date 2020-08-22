@@ -7,6 +7,7 @@ const {
   Skater,
   SkatePostComment,
   SkateSpotFollowing,
+  LikedPost,
 } = require("../../../db/models");
 const { uploadPicture } = require("../../../services/file-upload");
 const { uploadVideo } = require("../../../services/file-upload");
@@ -142,7 +143,6 @@ router
           },
         ],
       });
-      // console.log(posts);
       res.json(posts);
     })
   )
@@ -265,32 +265,36 @@ router.get(
 );
 
 /**
- * Route - /api/v1/skatespots/:skatespotid/following
+ * Route - /api/v1/skatespots/:skatespotid/followingspot
  *    GET - get list of followed skate spots
  */
 router.get(
-  "/:skatespotid/following",
+  "/:skatespotid(\\d+)/followingspot",
   requireAuth,
   asyncHandler(async (req, res) => {
     const skaterId = req.skater.id;
     const skateSpotId = parseInt(req.params.skatespotid, 10);
-    const followedSkateSpots = await SkateSpotFollowing.findOne({
+    const followedSkateSpot = await SkateSpotFollowing.findOne({
       where: {
         skaterId,
         skateSpotId,
       },
     });
 
-    res.json(followedSkateSpots);
+    if (followedSkateSpot) {
+      res.json({ success: true });
+    } else {
+      res.json({ success: false });
+    }
   })
 );
 
 /**
- * Route - /api/v1/skatespots/following/:skatespotid
+ * Route - /api/v1/skatespots/:skatespotid/following
  *    GET - get list of posts and comments from followed skatespots
  */
 router.get(
-  "/following/:skatespotid",
+  "/:skatespotid(\\d+)/following",
   requireAuth,
   asyncHandler(async (req, res) => {
     const skateSpotId = parseInt(req.params.skatespotid, 10);

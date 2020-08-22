@@ -13,6 +13,9 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: "chatRoomId",
       sourceKey: "id",
     });
+    ChatRoom.hasMany(models.ChatRoomSkater, {
+      foreignKey: "chatRoomId",
+    });
   };
   return ChatRoom;
 };

@@ -49,6 +49,26 @@ router.delete(
 );
 
 /**
+ * Route - /api/v1/skateposts/:postid/boardtap
+ *    GET - get all board tapped posts
+ */
+router.get(
+  "/:postid(\\d+)/boardtap",
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const skaterId = req.skater.id;
+    const postId = parseInt(req.params.postid, 10);
+    const postBoardTap = await LikedPost.findOne({
+      skaterId,
+      postId,
+    });
+
+    let found = postBoardTap ? true : false;
+    res.json({ success: found });
+  })
+);
+
+/**
  * Route - /api/v1/skateposts/boardtaps
  *    GET - get all board tapped posts
  */
