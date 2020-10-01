@@ -98,4 +98,41 @@ router.get(
   })
 );
 
+/**
+ * Route - "/api/v1/skaters/:skaterid/change-profile-picture"
+ *    PATCH - change skater profile picture
+ */
+router.patch(
+  "/:skaterid(\\d)/change-profile-picture",
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const skaterId = parseInt(req.params.skaterid, 10);
+    const skater = await Skater.findByPk(skaterId);
+    const { profileImg } = req.body;
+
+    if (skater) {
+      skater.accountPhoto = profileImg;
+      await skater.save();
+      res.json({ success: true });
+    } else {
+      res.json({ success: false });
+    }
+  })
+);
+
+/**
+ * Route - "api/v1/skaters/:skaterid/profile-picture"
+ *    GET - get skater profile picture
+ */
+router.get(
+  "/:skaterid(\\d)/profile-picture",
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const skaterId = parseInt(req.params.skaterid, 10);
+    const skater = await Skater.findByPk(skaterId);
+
+    res.json({ accountPhoto: skater.accountPhoto });
+  })
+);
+
 module.exports = router;
