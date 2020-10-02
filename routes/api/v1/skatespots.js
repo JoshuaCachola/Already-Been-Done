@@ -141,7 +141,7 @@ router
           {
             model: Skater,
             as: "skater",
-            attributes: ["firstName", "lastName", "username"],
+            attributes: ["firstName", "lastName", "username", "accountPhoto"],
           },
         ],
       });
@@ -184,7 +184,7 @@ router
           {
             model: Skater,
             as: "skaterCommenter",
-            attributes: ["username"],
+            attributes: ["username", "accountPhoto"],
           },
         ],
       });
@@ -271,7 +271,7 @@ router.get(
  *    GET - get list of followed skate spots
  */
 router.get(
-  "/:skatespotid(\\d+)/followingspot",
+  "/:skatespotid(\\d+)/following-spot",
   requireAuth,
   asyncHandler(async (req, res) => {
     const skaterId = req.skater.id;
