@@ -84,10 +84,10 @@ router.post(
  *    GET - get skater profile info
  */
 router.get(
-  "/:skaterid(\\d+)",
+  "/",
   requireAuth,
   asyncHandler(async (req, res) => {
-    const skaterId = parseInt(req.params.skaterid, 10);
+    const skaterId = req.skater.id;
     const skater = await Skater.findOne({
       where: {
         id: skaterId,
@@ -99,14 +99,14 @@ router.get(
 );
 
 /**
- * Route - "/api/v1/skaters/:skaterid/change-profile-picture"
+ * Route - "/api/v1/skaters/change-profile-picture"
  *    PATCH - change skater profile picture
  */
 router.patch(
-  "/:skaterid(\\d)/change-profile-picture",
+  "/change-profile-picture",
   requireAuth,
   asyncHandler(async (req, res) => {
-    const skaterId = parseInt(req.params.skaterid, 10);
+    const skaterId = req.skater.id;
     const skater = await Skater.findByPk(skaterId);
     const { profileImg } = req.body;
 
@@ -121,14 +121,14 @@ router.patch(
 );
 
 /**
- * Route - "api/v1/skaters/:skaterid/profile-picture"
+ * Route - "api/v1/skaters/profile-picture"
  *    GET - get skater profile picture
  */
 router.get(
   "/:skaterid(\\d)/profile-picture",
   requireAuth,
   asyncHandler(async (req, res) => {
-    const skaterId = parseInt(req.params.skaterid, 10);
+    const skaterId = req.skater.id;
     const skater = await Skater.findByPk(skaterId);
 
     res.json({ accountPhoto: skater.accountPhoto });

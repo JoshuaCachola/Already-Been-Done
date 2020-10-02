@@ -53,7 +53,7 @@ router
   );
 
 /**
- *  ROUTE - /api/v1/skatespots/:id
+ *  Route - /api/v1/skatespots/:id
  *    GET - get details of a skate spot
  */
 router.get(
@@ -73,7 +73,8 @@ router.get(
 );
 
 /**
- *  POST Endpoint - api/v1/skatespots/:id/upload-picture
+ *  Route - api/v1/skatespots/:id/upload-picture
+ *  POST - upload photo to AWS S3 bucket
  */
 router.post(
   // change to id
@@ -96,7 +97,8 @@ router.post(
 );
 
 /**
- *  POST Endpoint - api/v1/skatespots/:id/upload-video
+ *  Route - api/v1/skatespots/:id/upload-video
+ *  Post - upload video to AWS S3 bucket
  */
 router.post(
   // change to id
