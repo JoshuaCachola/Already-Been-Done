@@ -15,6 +15,7 @@ const router = express.Router();
 
 const singleUploadPicture = uploadPicture.single("image");
 const singleUploadVideo = uploadVideo.single("video");
+
 /**
  *  Route - /api/v1/skatespots
  *    GET Endpoint

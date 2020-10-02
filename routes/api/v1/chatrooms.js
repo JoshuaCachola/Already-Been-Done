@@ -7,7 +7,7 @@ const router = express.Router();
 /**
  * Route - /api/v1/chatrooms
  *    GET - get all chatrooms
- * 		POST - c
+ * 		POST - create a chat room
  */
 router
   .route("/")
@@ -62,4 +62,5 @@ router.get(
     }
   })
 );
+
 module.exports = router;

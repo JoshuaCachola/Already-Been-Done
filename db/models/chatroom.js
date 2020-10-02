@@ -3,8 +3,10 @@ module.exports = (sequelize, DataTypes) => {
   const ChatRoom = sequelize.define(
     "ChatRoom",
     {
-      name: DataTypes.STRING(25),
-      allowNull: false,
+      name: {
+        type: DataTypes.STRING(25),
+        allowNull: false,
+      },
     },
     {}
   );

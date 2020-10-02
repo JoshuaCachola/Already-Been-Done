@@ -59,12 +59,14 @@ router.get(
     const skaterId = req.skater.id;
     const postId = parseInt(req.params.postid, 10);
     const postBoardTap = await LikedPost.findOne({
-      skaterId,
-      postId,
+      where: {
+        skaterId,
+        postId,
+      },
     });
 
     let found = postBoardTap ? true : false;
-    res.json({ success: found });
+    res.json({ tapped: found });
   })
 );
 

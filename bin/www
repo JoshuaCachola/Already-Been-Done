@@ -3,7 +3,7 @@ const app = require("../app");
 const debug = require("debug")("starter:server");
 const http = require("http");
 const socketIO = require("socket.io");
-const { ChatRoom } = require("../db/models");
+const { ChatRoom, ChatMessage } = require("../db/models");
 
 // Get port from environment and store in Express
 const port = normalizePort(process.env.PORT || "8080");
@@ -24,9 +24,14 @@ io.on("connection", (socket) => {
   socket.on("message", async (data) => {
     const { chatRoomName, author, message } = data;
     const chatRoom = await ChatRoom.findAll({
+      where: { name: chatRoomName },
+    });
+
+    const chatRoomId = chatRoom[0].id;
+    const chatMessage = await ChatMessage.create({
       chatRoomId,
       author,
-      message: message,
+      message,
     });
     io.emit("newMessage", chatMessage);
   });
