@@ -1,5 +1,6 @@
 const express = require("express");
 const asyncHandler = require("express-async-handler");
+const { fn, col, where, literal } = require("sequelize");
 const { requireAuth } = require("../../../auth");
 const {
   SkateSpot,
@@ -135,6 +136,14 @@ router
     asyncHandler(async (req, res) => {
       const skateSpotId = parseInt(req.params.id, 10);
       const posts = await SkatePost.findAll({
+        // attributes: Object.keys(SkatePost.attributes).concat([
+        //   [
+        //     literal(
+        //       `(SELECT COUNT("LikedPost"."id") FROM "LikedPost" WHERE "LikedPost"."postId" = ${skateSpotId})`
+        //     ),
+        //     "likeCount",
+        //   ],
+        // ]),
         where: {
           skateSpotId,
         },
@@ -144,8 +153,30 @@ router
             as: "skater",
             attributes: ["firstName", "lastName", "username", "accountPhoto"],
           },
+          {
+            model: LikedPost,
+            attributes: [
+              [
+                literal(
+                  `(SELECT COUNT(*) FROM "LikedPosts" WHERE "LikedPosts"."postId" = ${skateSpotId})`
+                ),
+                "likeCount",
+              ],
+            ],
+          },
+          {
+            model: SkatePostComment,
+            attributes: [[fn("COUNT", "*"), "commentCount"]],
+          },
+        ],
+        group: [
+          "SkatePost.id",
+          "skater.id",
+          "LikedPosts.id",
+          "SkatePostComments.id",
         ],
       });
+
       res.json(posts);
     })
   )

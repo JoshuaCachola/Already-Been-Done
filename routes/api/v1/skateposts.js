@@ -1,7 +1,11 @@
 const express = require("express");
 const asyncHandler = require("express-async-handler");
 const { requireAuth } = require("../../../auth");
-const { SkatePost, LikedPost } = require("../../../db/models");
+const {
+  SkatePost,
+  LikedPost,
+  SkatePostComment,
+} = require("../../../db/models");
 const router = express.Router();
 
 /**
@@ -106,6 +110,30 @@ router.get(
     });
 
     res.json(skatePosts);
+  })
+);
+
+/**
+ * Route - /api/v1/skateposts/:skatePostId/comments-and-likes-count
+ *    GET - get count of comments and likes for skate post
+ */
+router.get(
+  "/:skatePostId(\\d+)/comments-and-likes-count",
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const skatePostId = parseInt(req.params.skatePostId, 10);
+
+    const commentsCount = await SkatePostComment.count({
+      where: {
+        skatePostId,
+      },
+    });
+
+    const likedPostCount = await LikedPost.count({
+      where: { postId: skatePostId },
+    });
+
+    res.json({ commentsCount, likedPostCount });
   })
 );
 
