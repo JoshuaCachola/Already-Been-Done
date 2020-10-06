@@ -327,4 +327,25 @@ router.get(
   })
 );
 
+/**
+ * Router - /api/v1/skatespots/followed-spots-count
+ *    Get - get the amount of followed skatespots for a skater
+ */
+router.get(
+  "/followed-spots-count",
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const skaterId = req.skater.id;
+    const count = await SkateSpotFollowing.count({
+      where: {
+        skaterId,
+      },
+      distinct: true,
+      col: "id",
+    });
+
+    res.json({ count });
+  })
+);
+
 module.exports = router;

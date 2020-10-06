@@ -80,11 +80,11 @@ router.post(
 );
 
 /**
- * Route - "/api/v1/skaters/:skaterid"
+ * Route - "/api/v1/skaters/skater-profile"
  *    GET - get skater profile info
  */
 router.get(
-  "/",
+  "/skater-profile",
   requireAuth,
   asyncHandler(async (req, res) => {
     const skaterId = req.skater.id;
@@ -132,6 +132,22 @@ router.get(
     const skater = await Skater.findByPk(skaterId);
 
     res.json({ accountPhoto: skater.accountPhoto });
+  })
+);
+
+/**
+ *  Route - "api/v1/skaters"
+ *    GET - get an array of all skaters
+ */
+router.get(
+  "/",
+  requireAuth,
+  asyncHandler(async (_, res) => {
+    const skaters = await Skater.findAll({
+      attributes: ["username", "accountPhoto"],
+    });
+
+    res.json(skaters);
   })
 );
 
