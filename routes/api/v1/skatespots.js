@@ -155,14 +155,7 @@ router
           },
           {
             model: LikedPost,
-            attributes: [
-              [
-                literal(
-                  `(SELECT COUNT(*) FROM "LikedPosts" WHERE "LikedPosts"."postId" = ${skateSpotId})`
-                ),
-                "likeCount",
-              ],
-            ],
+            attributes: [[fn("COUNT", "*"), "likeCount"]],
           },
           {
             model: SkatePostComment,
