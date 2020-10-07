@@ -1,6 +1,6 @@
 const router = require("express").Router();
 
-const routes = ["skaters", "skatespots", "skateposts", "chat"];
+const routes = ["skaters", "skatespots", "skateposts", "chat", "media"];
 
 router.get("/", (_, res) => {
   res.status(200).end();

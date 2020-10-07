@@ -1,6 +1,6 @@
 const express = require("express");
 const asyncHandler = require("express-async-handler");
-const { fn, col, where, literal } = require("sequelize");
+const { fn } = require("sequelize");
 const { requireAuth } = require("../../../auth");
 const {
   SkateSpot,
@@ -71,54 +71,6 @@ router.get(
     });
 
     res.json(skateSpotDetails);
-  })
-);
-
-/**
- *  Route - api/v1/skatespots/:id/upload-picture
- *  POST - upload photo to AWS S3 bucket
- */
-router.post(
-  // change to id
-  // need authentication
-  "/upload-image",
-  // requireAuth,
-  asyncHandler(async (req, res, next) => {
-    singleUploadPicture(req, res, (err) => {
-      if (err) {
-        // return res
-        //   .status(422)
-        //   .send({
-        //     errors: [{ title: "Image Upload Error", detail: err.message }],
-        //   });
-        next(err);
-      }
-      return res.json({ postUrl: req.file.location });
-    });
-  })
-);
-
-/**
- *  Route - api/v1/skatespots/:id/upload-video
- *  Post - upload video to AWS S3 bucket
- */
-router.post(
-  // change to id
-  // need authentication
-  "/upload-video",
-  // requireAuth,
-  asyncHandler(async (req, res, next) => {
-    singleUploadVideo(req, res, (err) => {
-      if (err) {
-        // return res
-        //   .status(422)
-        //   .send({
-        //     errors: [{ title: "Image Upload Error", detail: err.message }],
-        //   });
-        next(err);
-      }
-      return res.json({ postUrl: req.file.location });
-    });
   })
 );
 
