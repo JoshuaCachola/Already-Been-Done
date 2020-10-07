@@ -5,7 +5,9 @@ const {
   SkatePost,
   LikedPost,
   SkatePostComment,
+  Skater,
 } = require("../../../db/models");
+const { fn } = require("sequelize");
 const router = express.Router();
 
 /**
@@ -94,22 +96,42 @@ router.get(
 );
 
 /**
- * Route - /api/v1/skateposts
+ * Route - /api/v1/skateposts/my-posts
  *    GET - get all skateposts for specific skater
  */
 router.get(
-  "/",
+  "/my-posts",
   requireAuth,
   asyncHandler(async (req, res) => {
     const skaterId = req.skater.id;
-    const skatePosts = await SkatePost.findAll({
+    const posts = await SkatePost.findAll({
       where: {
         skaterId,
       },
-      order: [["createdAt", "DESC"]],
+      include: [
+        {
+          model: Skater,
+          as: "skater",
+          attributes: ["firstName", "lastName", "username", "accountPhoto"],
+        },
+        {
+          model: LikedPost,
+          attributes: [[fn("COUNT", "*"), "likeCount"]],
+        },
+        {
+          model: SkatePostComment,
+          attributes: [[fn("COUNT", "*"), "commentCount"]],
+        },
+      ],
+      group: [
+        "SkatePost.id",
+        "skater.id",
+        "LikedPosts.id",
+        "SkatePostComments.id",
+      ],
     });
 
-    res.json(skatePosts);
+    res.json(posts);
   })
 );
 

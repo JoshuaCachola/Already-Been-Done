@@ -136,14 +136,6 @@ router
     asyncHandler(async (req, res) => {
       const skateSpotId = parseInt(req.params.id, 10);
       const posts = await SkatePost.findAll({
-        // attributes: Object.keys(SkatePost.attributes).concat([
-        //   [
-        //     literal(
-        //       `(SELECT COUNT("LikedPost"."id") FROM "LikedPost" WHERE "LikedPost"."postId" = ${skateSpotId})`
-        //     ),
-        //     "likeCount",
-        //   ],
-        // ]),
         where: {
           skateSpotId,
         },
