@@ -36,7 +36,7 @@ router.post(
  *   	DELETE - remove board tap (like) from a post
  */
 router.delete(
-  "/:postid/boardtap",
+  "/:postid(\\d+)/boardtap",
   requireAuth,
   asyncHandler(async (req, res) => {
     const skaterId = req.skater.id;
@@ -116,10 +116,12 @@ router.get(
         },
         {
           model: LikedPost,
+          as: "likedPost",
           attributes: [[fn("COUNT", "*"), "likeCount"]],
         },
         {
           model: SkatePostComment,
+          as: "skateSpotComment",
           attributes: [[fn("COUNT", "*"), "commentCount"]],
         },
       ],
@@ -136,26 +138,20 @@ router.get(
 );
 
 /**
- * Route - /api/v1/skateposts/:skatePostId/comments-and-likes-count
- *    GET - get count of comments and likes for skate post
+ * Route - /api/v1/skaterposts/:id/delete
  */
-router.get(
-  "/:skatePostId(\\d+)/comments-and-likes-count",
+router.delete(
+  "/:id/delete",
   requireAuth,
   asyncHandler(async (req, res) => {
-    const skatePostId = parseInt(req.params.skatePostId, 10);
-
-    const commentsCount = await SkatePostComment.count({
-      where: {
-        skatePostId,
-      },
-    });
-
-    const likedPostCount = await LikedPost.count({
-      where: { postId: skatePostId },
-    });
-
-    res.json({ commentsCount, likedPostCount });
+    const id = parseInt(req.params.id, 10);
+    const skatePost = await SkatePost.findByPk(id);
+    if (skatePost) {
+      await skatePost.destroy();
+      res.json({ success: true });
+    } else {
+      res.json({ success: false });
+    }
   })
 );
 

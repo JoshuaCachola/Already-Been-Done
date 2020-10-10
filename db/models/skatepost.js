@@ -36,10 +36,14 @@ module.exports = (sequelize, DataTypes) => {
 
     SkatePost.hasMany(models.SkatePostComment, {
       foreignKey: "skatePostId",
+      as: "skatePostComment",
+      onDelete: "cascade",
     });
 
     SkatePost.hasMany(models.LikedPost, {
       foreignKey: "postId",
+      as: "likedPost",
+      onDelete: "cascade",
     });
   };
   return SkatePost;

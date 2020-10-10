@@ -10,12 +10,7 @@ const {
   SkateSpotFollowing,
   LikedPost,
 } = require("../../../db/models");
-const { uploadPicture } = require("../../../services/file-upload");
-const { uploadVideo } = require("../../../services/file-upload");
 const router = express.Router();
-
-const singleUploadPicture = uploadPicture.single("image");
-const singleUploadVideo = uploadVideo.single("video");
 
 /**
  *  Route - /api/v1/skatespots
@@ -99,10 +94,12 @@ router
           },
           {
             model: LikedPost,
+            as: "likedPost",
             attributes: [[fn("COUNT", "*"), "likeCount"]],
           },
           {
             model: SkatePostComment,
+            as: "skatePostComment",
             attributes: [[fn("COUNT", "*"), "commentCount"]],
           },
         ],

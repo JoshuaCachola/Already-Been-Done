@@ -1,18 +1,16 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
+const fetch = require("node-fetch");
 const { Skater } = require("../../../db/models");
 const { getSkaterToken } = require("../../../auth");
-const {
-  /* validateUserSignUp, */
-  validateUsernameAndPassword,
-} = require("../../../validations");
+const { validateUsernameAndPassword } = require("../../../validations");
 const { requireAuth } = require("../../../auth");
 
 const router = express.Router();
 
 /**
- *  POST endpoint - /skaters/session
+ *  POST endpoint - /api/v1/skaters/session
  *    - skater log in
  */
 router.post(
@@ -44,7 +42,7 @@ router.post(
 );
 
 /**
- *  Route - "/api/v1/skater/signup"
+ *  Route - "/api/v1/skaters/signup"
  *    POST
  *      - user sign up
  */
@@ -71,6 +69,20 @@ router.post(
     });
 
     const token = getSkaterToken(skater);
+
+    // change url to production URL
+    fetch(`http://localhost:9200/skaters/_doc/${skater.id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: skater.id,
+        username,
+        firstName,
+        lastName,
+      }),
+    });
 
     res.status(201).json({
       skater: { id: skater.id },
